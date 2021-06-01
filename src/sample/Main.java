@@ -23,7 +23,6 @@ public class Main extends Application {
 
     /*
         TODO:
-            setPrefSize
             Undo
             Redo
             Speichern Laden
@@ -37,20 +36,17 @@ public class Main extends Application {
 
         BorderPane borderPane = new BorderPane();
 
-        Board board = new Board(Map.ENGLISH);
-        System.out.println(Arrays.toString(Map.values()));
-
-
-        borderPane.setCenter(board);
+        borderPane.setCenter(boards[currentMap]);
 
         VBox vBox = new VBox();
         vBox.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
         vBox.setMinWidth(200);
-        Button nextMap = new Button("next Map");
-        nextMap.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> borderPane.setCenter(nextMap()));
 
-        Button previousMap = new Button("previous Map");
-        vBox.getChildren().addAll(nextMap, previousMap);
+        Button nextMap = new Button("next Map");
+
+        nextMap.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> borderPane.setCenter(nextMap(boards[currentMap])));
+
+        vBox.getChildren().addAll(nextMap);
 
         borderPane.setRight(vBox);
 
@@ -58,40 +54,29 @@ public class Main extends Application {
         stage.show();
     }
 
-    public static Board nextMap() {
-        int mapCount = Map.values().length-1;
-        Board currentBoard;
+    public static Board nextMap(Board usedBoard) {
+        int mapCount = Map.values().length;
 
-        if (currentMap >= mapCount) {
-            currentMap = 0;
+//        save previous board
+        boards[currentMap] = usedBoard;
+
+//        increment counter
+        currentMap++;
+        currentMap = (currentMap < mapCount) ? currentMap++ : 0;
+
+//        add new boards to the list, or load old ones
+        if (boards[currentMap] == null) {
+            boards[currentMap] = new Board(Map.values()[currentMap]);
+            return boards[currentMap];
         } else {
-            currentMap++;
+            return boards[currentMap];
         }
 
-        currentBoard = boards[currentMap];
-
-        if (currentBoard == null) {
-            currentBoard = new Board(Map.values()[currentMap]);
-            boards[currentMap] = currentBoard;
-        }
-
-        System.out.println(Arrays.toString(boards));
-        return currentBoard;
-    }
-
-    public static Map previousMap(int currentMap) {
-        int mapCount = Map.values().length-1;
-        if (mapCount < 0) {
-            currentMap = mapCount;
-        } else {
-            currentMap--;
-        }
-
-        return Map.values()[currentMap];
     }
 
 
     public static void main(String[] args) {
+        boards[0] = new Board(Map.values()[0]);
         launch(args);
     }
 }

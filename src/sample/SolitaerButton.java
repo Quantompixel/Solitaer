@@ -148,7 +148,10 @@ public class SolitaerButton extends Button implements PlayButton{
         addEventHandler(MouseEvent.MOUSE_EXITED,
                 e -> onMouseExit());
         addEventHandler(MouseEvent.MOUSE_CLICKED,
-                e -> onMouseClick());
+            e -> {
+                if (parentBoard.checkWin()) return;
+                onMouseClick();
+            });
     }
 
     public List<SolitaerButton> getNeighbours() {

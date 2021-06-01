@@ -1,13 +1,17 @@
 package sample;
 
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class Board extends GridPane{
+public class Board extends GridPane {
     private final List<SolitaerButton> solitaerButtons = new ArrayList<>();
     private final List<ControlButton> controlButtons = new ArrayList<>();
     public final Map board;
@@ -38,20 +42,42 @@ public class Board extends GridPane{
     }
 
     public void addControlButton() {
-        int width = board.map[board.map.length-1].length-1;
-        int height = board.map.length-1;
+        int width = board.map[board.map.length - 1].length - 1;
+        int height = board.map.length - 1;
 
         ControlButton resetButton = new ControlButton(this, Tag.RESET, "\u2B6F", "RESET");
         controlButtons.add(resetButton);
-        add(resetButton, width,height);
+        add(resetButton, width, height);
 
-        ControlButton redoButton = new ControlButton(this, Tag.REDO,"\u21B7","REDO");
+        ControlButton redoButton = new ControlButton(this, Tag.REDO, "\u21B7", "REDO");
         controlButtons.add(redoButton);
-        add(redoButton, width-1,height);
+        add(redoButton, width - 1, height);
 
-        ControlButton undoButton = new ControlButton(this, Tag.UNDO,"\u21B6","UNDO");
+        ControlButton undoButton = new ControlButton(this, Tag.UNDO, "\u21B6", "UNDO");
         controlButtons.add(undoButton);
-        add(undoButton, width-2,height);
+        add(undoButton, width - 2, height);
+    }
+
+    public boolean checkWin() {
+        SolitaerButton winButton = null;
+
+        for (SolitaerButton element : solitaerButtons) {
+            if (element.tag == Tag.FILLED) {
+                if (winButton == null) {
+                    winButton = element;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        assert winButton != null;
+        if ((winButton.xPos == board.winPos[0]) && (winButton.yPos == board.winPos[1])) {
+            winButton.setText("WIN");
+            winButton.setTextFill(Color.WHITE);
+            return true;
+        }
+        return false;
     }
 
     public void generateBoard(char[][] board) {
@@ -111,6 +137,6 @@ public class Board extends GridPane{
 
     @Override
     public String toString() {
-        return "Board";
+        return "Board : " + board;
     }
 }
