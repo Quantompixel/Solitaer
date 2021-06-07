@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.RadialGradient;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -73,7 +74,6 @@ public class Main extends Application {
         }
 
     }
-
 
     public static void main(String[] args) {
         boards[0] = new Board(Map.values()[0]);

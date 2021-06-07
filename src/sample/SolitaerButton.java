@@ -8,9 +8,10 @@ import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class SolitaerButton extends Button implements PlayButton{
+public class SolitaerButton extends Button implements PlayButton {
     Board parentBoard;
     int xPos;
     int yPos;
@@ -45,6 +46,11 @@ public class SolitaerButton extends Button implements PlayButton{
         setBackground(background);
     }
 
+    public SolitaerButton(int xPos, int yPos, Board board, Tag tag) {
+        this.parentBoard = board;
+        setTag(tag);
+    }
+
     public SolitaerButton() {
         this.xPos = 0;
         this.yPos = 0;
@@ -52,20 +58,14 @@ public class SolitaerButton extends Button implements PlayButton{
 
     public void init() {
         setBackground(background);
-        setPrefSize(screenSize.getHeight()/parentBoard.board.map.length,screenSize.getHeight()/parentBoard.board.map.length);
-        setMinSize(30,30);
+        setPrefSize(screenSize.getHeight() / parentBoard.board.map.length, screenSize.getHeight() / parentBoard.board.map.length);
+        setMinSize(30, 30);
         addListeners();
     }
 
-    public void setEmpty() {
-        tag = Tag.EMPTY;
-        background = Tag.EMPTY.background;
-        setBackground(background);
-    }
-
-    public void setFilled() {
-        tag = Tag.FILLED;
-        background = Tag.FILLED.background;
+    public void setTag(Tag tag) {
+        this.tag = tag;
+        background = tag.background;
         setBackground(background);
     }
 
@@ -110,15 +110,34 @@ public class SolitaerButton extends Button implements PlayButton{
             case EMPTY:
                 parentBoard.resetColors();
 
+                //returns if the first ever clicked button is EMPTY which creates a nullpointer.
+                if (parentBoard.getLastClicked() == null) {
+                    return;
+                }
+
                 SolitaerButton lastClicked = parentBoard.getLastClicked();
                 SolitaerButton middleButton = parentBoard.getButtonByCords((xPos + lastClicked.xPos) / 2, (yPos + lastClicked.yPos) / 2);
 
                 for (SolitaerButton neighbour : neighbours) {
 
                     if (neighbour.equals(lastClicked) && middleButton.tag == Tag.FILLED) {
-                        middleButton.setEmpty();
-                        lastClicked.setEmpty();
-                        setFilled();
+                        //create new move
+                        Move move = new Move();
+
+                        //state before the jump
+                        move.setBefore(new SolitaerButton(lastClicked.xPos, lastClicked.yPos, parentBoard, Tag.FILLED), new SolitaerButton(middleButton.xPos, middleButton.yPos, parentBoard, Tag.FILLED), new SolitaerButton(xPos, yPos, parentBoard, Tag.EMPTY));
+
+                        //update state of the pieces
+                        middleButton.setTag(Tag.EMPTY);
+                        lastClicked.setTag(Tag.EMPTY);
+                        setTag(Tag.FILLED);
+
+                        //state after the jump
+                        move.setAfter(lastClicked, middleButton, this);
+
+                        //push move on the stack
+                        parentBoard.moves.push(move);
+
                     }
                 }
 
@@ -148,10 +167,10 @@ public class SolitaerButton extends Button implements PlayButton{
         addEventHandler(MouseEvent.MOUSE_EXITED,
                 e -> onMouseExit());
         addEventHandler(MouseEvent.MOUSE_CLICKED,
-            e -> {
-                if (parentBoard.checkWin()) return;
-                onMouseClick();
-            });
+                e -> {
+                    if (parentBoard.checkWin()) return;
+                    onMouseClick();
+                });
     }
 
     public List<SolitaerButton> getNeighbours() {

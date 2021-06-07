@@ -16,7 +16,7 @@ public class Board extends GridPane {
     private final List<ControlButton> controlButtons = new ArrayList<>();
     public final Map board;
     private SolitaerButton lastClicked;
-    Stack<char[][]> moves = new Stack();
+    Stack<Move> moves = new Stack();
 
     public Board(Map map) {
         this.board = map;
@@ -49,13 +49,13 @@ public class Board extends GridPane {
         controlButtons.add(resetButton);
         add(resetButton, width, height);
 
-        ControlButton redoButton = new ControlButton(this, Tag.REDO, "\u21B7", "REDO");
+        ControlButton redoButton = new ControlButton(this, Tag.REDO, "\u21B6", "REDO");
         controlButtons.add(redoButton);
-        add(redoButton, width - 1, height);
+        add(redoButton, width - 2, height);
 
-        ControlButton undoButton = new ControlButton(this, Tag.UNDO, "\u21B6", "UNDO");
+        ControlButton undoButton = new ControlButton(this, Tag.UNDO, "\u21B7", "UNDO");
         controlButtons.add(undoButton);
-        add(undoButton, width - 2, height);
+        add(undoButton, width - 1, height);
     }
 
     public boolean checkWin() {
@@ -116,14 +116,10 @@ public class Board extends GridPane {
 
             switch (i) {
                 case 'O':
-                    current.tag = Tag.EMPTY;
-                    current.background = Tag.EMPTY.background;
-                    current.setEmpty();
+                    current.setTag(Tag.EMPTY);
                     break;
                 case '#':
-                    current.tag = Tag.FILLED;
-                    current.background = Tag.FILLED.background;
-                    current.setFilled();
+                    current.setTag(Tag.FILLED);
                     break;
             }
         }
