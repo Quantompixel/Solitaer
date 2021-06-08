@@ -16,7 +16,7 @@ public class Board extends GridPane {
     private final List<ControlButton> controlButtons = new ArrayList<>();
     public final Map board;
     private SolitaerButton lastClicked;
-    Stack<Move> moves = new Stack();
+    StackWithPointer<Move> moves = new StackWithPointer();
 
     public Board(Map map) {
         this.board = map;
@@ -39,45 +39,6 @@ public class Board extends GridPane {
         }
 
         return solitaerButtons.get(0);
-    }
-
-    public void addControlButton() {
-        int width = board.map[board.map.length - 1].length - 1;
-        int height = board.map.length - 1;
-
-        ControlButton resetButton = new ControlButton(this, Tag.RESET, "\u2B6F", "RESET");
-        controlButtons.add(resetButton);
-        add(resetButton, width, height);
-
-        ControlButton redoButton = new ControlButton(this, Tag.REDO, "\u21B6", "REDO");
-        controlButtons.add(redoButton);
-        add(redoButton, width - 2, height);
-
-        ControlButton undoButton = new ControlButton(this, Tag.UNDO, "\u21B7", "UNDO");
-        controlButtons.add(undoButton);
-        add(undoButton, width - 1, height);
-    }
-
-    public boolean checkWin() {
-        SolitaerButton winButton = null;
-
-        for (SolitaerButton element : solitaerButtons) {
-            if (element.tag == Tag.FILLED) {
-                if (winButton == null) {
-                    winButton = element;
-                } else {
-                    return false;
-                }
-            }
-        }
-
-        assert winButton != null;
-        if ((winButton.xPos == board.winPos[0]) && (winButton.yPos == board.winPos[1])) {
-            winButton.setText("WIN");
-            winButton.setTextFill(Color.WHITE);
-            return true;
-        }
-        return false;
     }
 
     public void generateBoard(char[][] board) {
@@ -110,6 +71,23 @@ public class Board extends GridPane {
         addControlButton();
     }
 
+    public void addControlButton() {
+        int width = board.map[board.map.length - 1].length - 1;
+        int height = board.map.length - 1;
+
+        ControlButton resetButton = new ControlButton(this, Tag.RESET, "\u2B6F", "RESET");
+        controlButtons.add(resetButton);
+        add(resetButton, width, height);
+
+        ControlButton redoButton = new ControlButton(this, Tag.REDO, "\u21B6", "REDO");
+        controlButtons.add(redoButton);
+        add(redoButton, width - 2, height);
+
+        ControlButton undoButton = new ControlButton(this, Tag.UNDO, "\u21B7", "UNDO");
+        controlButtons.add(undoButton);
+        add(undoButton, width - 1, height);
+    }
+
     public void resetBoard() {
         for (SolitaerButton current : solitaerButtons) {
             int i = board.map[current.yPos][current.xPos];
@@ -129,6 +107,41 @@ public class Board extends GridPane {
         for (SolitaerButton current : solitaerButtons) {
             current.setBackground(current.background);
         }
+    }
+
+    public void undo() {
+        SolitaerButton[] old = moves.undo().before;
+        System.out.println(moves);
+
+        for (SolitaerButton element : old) {
+            getButtonByCords(element.xPos, element.yPos).setTag(element.tag);
+        }
+    }
+
+    public void redo() {
+
+    }
+
+    public boolean checkWin() {
+        SolitaerButton winButton = null;
+
+        for (SolitaerButton element : solitaerButtons) {
+            if (element.tag == Tag.FILLED) {
+                if (winButton == null) {
+                    winButton = element;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        assert winButton != null;
+        if ((winButton.xPos == board.winPos[0]) && (winButton.yPos == board.winPos[1])) {
+            winButton.setText("WIN");
+            winButton.setTextFill(Color.WHITE);
+            return true;
+        }
+        return false;
     }
 
     @Override

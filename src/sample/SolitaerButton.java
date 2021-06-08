@@ -47,6 +47,8 @@ public class SolitaerButton extends Button implements PlayButton {
     }
 
     public SolitaerButton(int xPos, int yPos, Board board, Tag tag) {
+        this.xPos = xPos;
+        this.yPos = yPos;
         this.parentBoard = board;
         setTag(tag);
     }
@@ -136,7 +138,8 @@ public class SolitaerButton extends Button implements PlayButton {
                         move.setAfter(lastClicked, middleButton, this);
 
                         //push move on the stack
-                        parentBoard.moves.push(move);
+                        parentBoard.moves.insertWithPointer(move);
+                        System.out.println(parentBoard.moves);;
 
                     }
                 }

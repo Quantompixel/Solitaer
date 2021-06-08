@@ -1,6 +1,7 @@
 package sample;
 
 public class Move {
+
     SolitaerButton[] before = new SolitaerButton[3];
     SolitaerButton[] after = new SolitaerButton[3];
 
@@ -33,16 +34,9 @@ public class Move {
         after[2] = land;
     }
 
-    public void undo() {
-
-    }
-
-    public void redo() {
-
-    }
-
     @Override
     public String toString() {
-        return "{" + before[0].tag + " -> " + after[0].tag + " : " + before[1].tag + " -> " + after[1].tag + " : " + before[2].tag + " -> " + after[2].tag + "}";
+//        return "{" + before[0].tag + " -> " + after[0].tag + " : " + before[1].tag + " -> " + after[1].tag + " : " + before[2].tag + " -> " + after[2].tag + "}";
+        return "{" + '#' + "}";
     }
 }
