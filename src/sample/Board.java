@@ -110,7 +110,8 @@ public class Board extends GridPane {
     }
 
     public void undo() {
-        SolitaerButton[] old = moves.undo().before;
+        Move move = moves.undo();
+        SolitaerButton[] old = move.before;
         System.out.println(moves);
 
         for (SolitaerButton element : old) {

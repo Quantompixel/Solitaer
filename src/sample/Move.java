@@ -37,6 +37,8 @@ public class Move {
     @Override
     public String toString() {
 //        return "{" + before[0].tag + " -> " + after[0].tag + " : " + before[1].tag + " -> " + after[1].tag + " : " + before[2].tag + " -> " + after[2].tag + "}";
-        return "{" + '#' + "}";
+//        return "{" + '#' + "}";
+
+        return "{" + before[0].tag.toString().charAt(0) + "->" + after[0].tag.toString().charAt(0) + " : " + before[1].tag.toString().charAt(0) + "->" + after[1].tag.toString().charAt(0) + " : " + before[2].tag.toString().charAt(0) + "->" + after[2].tag.toString().charAt(0) + "}";
     }
 }

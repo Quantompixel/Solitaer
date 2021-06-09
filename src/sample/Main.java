@@ -35,6 +35,17 @@ public class Main extends Application {
 
         stage.setTitle("Solitaer");
 
+//        StackWithPointer<Integer> s = new StackWithPointer<>();
+//
+//        for (int i = 0; i < 51; i++) {
+//            s.insertWithPointer(i);
+//        }
+//
+//        s.undo();
+//        s.undo();
+//        s.insertWithPointer(99);
+//        System.out.println(s);
+
         BorderPane borderPane = new BorderPane();
 
         borderPane.setCenter(boards[currentMap]);

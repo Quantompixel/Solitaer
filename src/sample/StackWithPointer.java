@@ -15,11 +15,21 @@ public class StackWithPointer<E> extends Stack<E> {
     }
 
     public void pushWithPointer(E element) {
+        if (size() != 0) {
+            if (get(pointer).equals(element)) {
+                System.out.println("HELLO");
+                return;
+            }
+        }
+
         push(element);
         pointer++;
     }
 
     public E undo() {
+        if (pointer - 1 < 0) {
+            return get(0);
+        }
         pointer--;
         return get(pointer);
     }
