@@ -6,7 +6,7 @@ import java.util.List;
 public class UndoRedoList<E> {
 
     private List<E> list = new ArrayList<>();
-    public int pointer = 0;
+    private int pointer = 0;
 
     public void add(E element) {
         if (pointer != list.size()) {
@@ -45,6 +45,14 @@ public class UndoRedoList<E> {
     public void reset() {
         pointer = 0;
         list.clear();
+    }
+
+    public int getPointer() {
+        return pointer;
+    }
+
+    public int size() {
+        return list.size();
     }
 
     @Override

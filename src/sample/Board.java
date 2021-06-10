@@ -17,11 +17,9 @@ public class Board extends GridPane {
     private final List<ControlButton> controlButtons = new ArrayList<>();
     public final Map board;
     private SolitaerButton lastClicked;
-    UndoRedoList<Move> moves = new UndoRedoList<>();
+    UndoRedoList<int[][]> moves = new UndoRedoList<>();
 
     public Board(Map map) {
-
-
         this.board = map;
         generateBoard(board.map);
     }
@@ -115,13 +113,13 @@ public class Board extends GridPane {
     }
 
     public void undo() {
-        Move move = moves.undo();
-        SolitaerButton[] before = move.before;
-        System.out.println(moves + "(" + moves.pointer + ")");
+        if (moves.getPointer() == 0) {
+            return;
+        }
 
-        for (SolitaerButton element : before) {
+        for (int[] element : moves.undo()) {
 
-            SolitaerButton btn = getButtonByCords(element.xPos, element.yPos);
+            SolitaerButton btn = getButtonByCords(element[0], element[1]);
             if (btn.tag == Tag.EMPTY) {
                 btn.setTag(Tag.FILLED);
             } else {
@@ -129,23 +127,22 @@ public class Board extends GridPane {
             }
 
 
-
         }
     }
 
     public void redo() {
-        Move move = moves.redo();
-        SolitaerButton[] after = move.after;
-        System.out.println(moves + "(" + moves.pointer + ")");
+        if (moves.size() == moves.getPointer()) {
+            return;
+        }
 
-        for (SolitaerButton element : after) {
+        for (int[] element : moves.redo()) {
 
-            SolitaerButton btn = getButtonByCords(element.xPos, element.yPos);
+            SolitaerButton btn = getButtonByCords(element[0], element[1]);
 
             if (btn.tag == Tag.EMPTY) {
-                element.setTag(Tag.FILLED);
+                getButtonByCords(element[0], element[1]).setTag(Tag.FILLED);
             } else {
-                element.setTag(Tag.EMPTY);
+                getButtonByCords(element[0], element[1]).setTag(Tag.EMPTY);
             }
         }
     }

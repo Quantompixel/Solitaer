@@ -121,25 +121,13 @@ public class SolitaerButton extends Button implements PlayButton {
                 for (SolitaerButton neighbour : neighbours) {
 
                     if (neighbour.equals(lastClicked) && middleButton.tag == Tag.FILLED) {
-                        //create new move
-                        Move move = new Move();
-
-                        //state before the jump
-                        move.setBefore(new SolitaerButton(lastClicked.xPos, lastClicked.yPos, parentBoard, Tag.FILLED), new SolitaerButton(middleButton.xPos, middleButton.yPos, parentBoard, Tag.FILLED), new SolitaerButton(xPos, yPos, parentBoard, Tag.EMPTY));
-
                         //update state of the pieces
                         middleButton.setTag(Tag.EMPTY);
                         lastClicked.setTag(Tag.EMPTY);
                         setTag(Tag.FILLED);
 
-                        //state after the jump
-                        move.setAfter(lastClicked, middleButton, this);
-
-                        //push move on the stack
-                        parentBoard.moves.add(move);
-                        System.out.println(parentBoard.moves + "(" + parentBoard.moves.pointer + ")");
-                        ;
-
+                        //add new move
+                        parentBoard.moves.add(new int[][]{{lastClicked.xPos,lastClicked.yPos},{middleButton.xPos, middleButton.yPos},{xPos,yPos}});
                     }
                 }
 
