@@ -17,8 +17,7 @@ public class Board extends GridPane {
     private final List<ControlButton> controlButtons = new ArrayList<>();
     public final Map board;
     private SolitaerButton lastClicked;
-    StackWithPointer<Move> moves = new StackWithPointer();
-    LinkedList<Integer> linkedList = new LinkedList<>();
+    UndoRedoList<Move> moves = new UndoRedoList<>();
 
     public Board(Map map) {
 
@@ -117,16 +116,38 @@ public class Board extends GridPane {
 
     public void undo() {
         Move move = moves.undo();
-        SolitaerButton[] old = move.before;
+        SolitaerButton[] before = move.before;
         System.out.println(moves + "(" + moves.pointer + ")");
 
-        for (SolitaerButton element : old) {
-            getButtonByCords(element.xPos, element.yPos).setTag(element.tag);
+        for (SolitaerButton element : before) {
+
+            SolitaerButton btn = getButtonByCords(element.xPos, element.yPos);
+            if (btn.tag == Tag.EMPTY) {
+                btn.setTag(Tag.FILLED);
+            } else {
+                btn.setTag(Tag.EMPTY);
+            }
+
+
+
         }
     }
 
     public void redo() {
+        Move move = moves.redo();
+        SolitaerButton[] after = move.after;
+        System.out.println(moves + "(" + moves.pointer + ")");
 
+        for (SolitaerButton element : after) {
+
+            SolitaerButton btn = getButtonByCords(element.xPos, element.yPos);
+
+            if (btn.tag == Tag.EMPTY) {
+                element.setTag(Tag.FILLED);
+            } else {
+                element.setTag(Tag.EMPTY);
+            }
+        }
     }
 
     public boolean checkWin() {

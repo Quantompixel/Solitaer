@@ -1,7 +1,5 @@
 package sample;
 
-import java.util.Collection;
-
 public class Move {
 
     SolitaerButton[] before = new SolitaerButton[3];

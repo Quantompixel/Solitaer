@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -8,7 +7,6 @@ import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SolitaerButton extends Button implements PlayButton {
@@ -138,8 +136,9 @@ public class SolitaerButton extends Button implements PlayButton {
                         move.setAfter(lastClicked, middleButton, this);
 
                         //push move on the stack
-                        parentBoard.moves.insertWithPointer(move);
-                        System.out.println(parentBoard.moves + "(" + parentBoard.moves.pointer + ")");;
+                        parentBoard.moves.add(move);
+                        System.out.println(parentBoard.moves + "(" + parentBoard.moves.pointer + ")");
+                        ;
 
                     }
                 }
