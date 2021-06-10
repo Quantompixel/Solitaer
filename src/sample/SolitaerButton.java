@@ -139,7 +139,7 @@ public class SolitaerButton extends Button implements PlayButton {
 
                         //push move on the stack
                         parentBoard.moves.insertWithPointer(move);
-                        System.out.println(parentBoard.moves);;
+                        System.out.println(parentBoard.moves + "(" + parentBoard.moves.pointer + ")");;
 
                     }
                 }

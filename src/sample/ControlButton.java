@@ -44,8 +44,7 @@ public class ControlButton extends Button implements PlayButton{
         switch (tag) {
             case RESET:
                 parentBoard.resetBoard();
-                parentBoard.moves.removeAllElements();
-                parentBoard.moves.pointer = -1;
+                parentBoard.moves.reset();
                 System.out.println(parentBoard.moves);;
                 break;
             case REDO:

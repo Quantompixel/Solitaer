@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
@@ -17,8 +18,11 @@ public class Board extends GridPane {
     public final Map board;
     private SolitaerButton lastClicked;
     StackWithPointer<Move> moves = new StackWithPointer();
+    LinkedList<Integer> linkedList = new LinkedList<>();
 
     public Board(Map map) {
+
+
         this.board = map;
         generateBoard(board.map);
     }
@@ -94,9 +98,11 @@ public class Board extends GridPane {
 
             switch (i) {
                 case 'O':
+                    current.setText("");
                     current.setTag(Tag.EMPTY);
                     break;
                 case '#':
+                    current.setText("");
                     current.setTag(Tag.FILLED);
                     break;
             }
@@ -112,7 +118,7 @@ public class Board extends GridPane {
     public void undo() {
         Move move = moves.undo();
         SolitaerButton[] old = move.before;
-        System.out.println(moves);
+        System.out.println(moves + "(" + moves.pointer + ")");
 
         for (SolitaerButton element : old) {
             getButtonByCords(element.xPos, element.yPos).setTag(element.tag);

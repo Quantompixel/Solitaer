@@ -15,13 +15,6 @@ public class StackWithPointer<E> extends Stack<E> {
     }
 
     public void pushWithPointer(E element) {
-        if (size() != 0) {
-            if (get(pointer).equals(element)) {
-                System.out.println("HELLO");
-                return;
-            }
-        }
-
         push(element);
         pointer++;
     }
@@ -44,9 +37,18 @@ public class StackWithPointer<E> extends Stack<E> {
     public void deleteElementsAfterPointer() {
         if (size() < 1) return;
 
+        if (pointer == 0) {
+            removeAllElements();
+        }
+
         for (int i = size()-1; i > pointer; i--) {
             pop();
         }
+    }
+
+    public void reset() {
+        pointer = 0;
+        removeAllElements();
     }
 
 }
