@@ -1,9 +1,7 @@
-package sample;
+package game;
 
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,7 +12,6 @@ public class SolitaerButton extends Button implements PlayButton {
     int xPos;
     int yPos;
     Tag tag;
-    Background background;
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     public SolitaerButton(String text, int xPos, int yPos, Board board, Tag tag) {
@@ -23,41 +20,12 @@ public class SolitaerButton extends Button implements PlayButton {
         this.yPos = yPos;
         this.parentBoard = board;
         this.tag = tag;
-    }
-
-    public SolitaerButton(String text, int xPos, int yPos, Board board, Tag tag, Color color) {
-        super(text);
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.parentBoard = board;
-        this.tag = tag;
-        this.background = tag.background;
         init();
     }
 
-    public SolitaerButton(int xPos, int yPos, Board board, Tag tag, Color color) {
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.parentBoard = board;
-        this.tag = tag;
-        this.background = tag.background;
-        setBackground(background);
-    }
-
-    public SolitaerButton(int xPos, int yPos, Board board, Tag tag) {
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.parentBoard = board;
-        setTag(tag);
-    }
-
-    public SolitaerButton() {
-        this.xPos = 0;
-        this.yPos = 0;
-    }
 
     public void init() {
-        setBackground(background);
+        setStyle(tag.style);
         setPrefSize(screenSize.getHeight() / parentBoard.board.map.length, screenSize.getHeight() / parentBoard.board.map.length);
         setMinSize(30, 30);
         addListeners();
@@ -65,42 +33,16 @@ public class SolitaerButton extends Button implements PlayButton {
 
     public void setTag(Tag tag) {
         this.tag = tag;
-        background = tag.background;
-        setBackground(background);
+        setStyle(tag.style);
     }
 
     @Override
     public void onMouseEnter() {
-        switch (tag) {
-            case EMPTY:
-                break;
-            case FILLED:
-                /*
-                List<SolitaerButton> neighbours = getNeighbours();
-
-                for (SolitaerButton current : neighbours) {
-                    //current.setBackground(current.background..brighter());
-                }
-                break;
-                */
-
-            case WALL:
-
-        }
-
     }
 
     @Override
     public void onMouseExit() {
-        /*
-        List<SolitaerButton> neighbours = getNeighbours();
-
-        for (SolitaerButton current : neighbours) {
-            current.setBackground(current.background);
-        }
-        */
-
-    }
+     }
 
     @Override
     public void onMouseClick() {
@@ -128,6 +70,9 @@ public class SolitaerButton extends Button implements PlayButton {
 
                         //add new move
                         parentBoard.moves.add(new int[][]{{lastClicked.xPos,lastClicked.yPos},{middleButton.xPos, middleButton.yPos},{xPos,yPos}});
+
+                        //check for win
+                        parentBoard.checkWin();
                     }
                 }
 
@@ -137,7 +82,7 @@ public class SolitaerButton extends Button implements PlayButton {
 
                 for (SolitaerButton current : neighbours) {
                     if (current.tag == Tag.EMPTY) {
-                        current.setBackground(Tag.SELECTED.background);
+                        current.setStyle(Tag.SELECTED.style);
 
                     }
                 }

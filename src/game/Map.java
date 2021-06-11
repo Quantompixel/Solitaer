@@ -1,4 +1,4 @@
-package sample;
+package game;
 
 public enum Map {
     ENGLISH(new char[][]{

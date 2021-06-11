@@ -1,4 +1,4 @@
-package sample;
+package game;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -26,6 +26,7 @@ public class ControlButton extends Button implements PlayButton{
         setTooltip(new Tooltip(tooltip));
         setPrefSize(screenSize.getHeight()/ this.parentBoard.board.map.length,screenSize.getHeight()/ this.parentBoard.board.map.length);
         setMinSize(30,30);
+        setStyle(tag.style);
         addListeners();
     }
 

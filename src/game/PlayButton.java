@@ -1,4 +1,4 @@
-package sample;
+package game;
 
 public interface PlayButton {
     void onMouseEnter();

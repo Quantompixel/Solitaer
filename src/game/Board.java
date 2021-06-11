@@ -1,16 +1,10 @@
-package sample;
+package game;
 
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
 
 public class Board extends GridPane {
     private final List<SolitaerButton> solitaerButtons = new ArrayList<>();
@@ -21,6 +15,7 @@ public class Board extends GridPane {
 
     public Board(Map map) {
         this.board = map;
+        setStyle("-fx-background-color: #cad2c5");
         generateBoard(board.map);
     }
 
@@ -51,24 +46,23 @@ public class Board extends GridPane {
 
                 switch (current) {
                     case 'O':
-                        btn = new SolitaerButton("", j, i, this, Tag.EMPTY, Color.GREEN);
+                        btn = new SolitaerButton("", j, i, this, Tag.EMPTY);
                         solitaerButtons.add(btn);
                         add(btn, btn.xPos, btn.yPos);
                         break;
                     case '#':
-                        btn = new SolitaerButton("", j, i, this, Tag.FILLED, Color.GRAY);
+                        btn = new SolitaerButton("", j, i, this, Tag.FILLED);
                         solitaerButtons.add(btn);
                         add(btn, btn.xPos, btn.yPos);
                         break;
                     case '.':
-                        btn = new SolitaerButton("", j, i, this, Tag.WALL, Color.WHITE);
+                        btn = new SolitaerButton("", j, i, this, Tag.WALL);
                         solitaerButtons.add(btn);
                         add(btn, btn.xPos, btn.yPos);
                         break;
                 }
             }
         }
-        //addListeners(solitaerButtons);
         addControlButton();
     }
 
@@ -108,7 +102,7 @@ public class Board extends GridPane {
 
     public void resetColors() {
         for (SolitaerButton current : solitaerButtons) {
-            current.setBackground(current.background);
+            current.setStyle(current.tag.style);
         }
     }
 
