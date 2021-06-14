@@ -32,12 +32,13 @@ public class ControlButton extends Button implements PlayButton{
 
     @Override
     public void onMouseEnter() {
-
+        setStyle("-fx-background-radius: 10%;"+ "-fx-font-size: 15pt;" + "-fx-background-color: #75a77f;"  + "-fx-background-insets: 0.5 0.5 0.5 0.5;");
+        //#5b7d78
     }
 
     @Override
     public void onMouseExit() {
-
+        setStyle(tag.style);
     }
 
     @Override
