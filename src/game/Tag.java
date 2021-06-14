@@ -8,7 +8,9 @@ public enum Tag {
 
     RESET("-fx-background-radius: 10%;"+ "-fx-font-size: 15pt;" + "-fx-background-color: #6B917E;"  + "-fx-background-insets: 2.0 2.0 2.0 2.0;"),
     UNDO("-fx-background-radius: 10%;"+ "-fx-font-size: 15pt;" + "-fx-background-color: #6B917E;"  + "-fx-background-insets: 2.0 2.0 2.0 2.0;"),
-    REDO("-fx-background-radius: 10%;"+ "-fx-font-size: 15pt;" + "-fx-background-color: #6B917E;"  + "-fx-background-insets: 2.0 2.0 2.0 2.0;");
+    REDO("-fx-background-radius: 10%;"+ "-fx-font-size: 15pt;" + "-fx-background-color: #6B917E;"  + "-fx-background-insets: 2.0 2.0 2.0 2.0;"),
+
+    MAP("-fx-background-radius: 10%;"+ "-fx-font-size: 14pt;" + "-fx-background-color: #6B917E;"  + "-fx-background-insets: 2.0 2.0 2.0 2.0;");
 
     public String style;
 
