@@ -100,7 +100,7 @@ public class Board extends GridPane {
         }
     }
 
-    public void resetColors() {
+    public void resetStyle() {
         for (SolitaerButton current : solitaerButtons) {
             current.setStyle(current.tag.style);
         }

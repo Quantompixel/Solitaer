@@ -38,11 +38,13 @@ public class SolitaerButton extends Button implements PlayButton {
 
     @Override
     public void onMouseEnter() {
+//        if (tag == Tag.FILLED) setStyle("-fx-background-radius: 50%; " + "-fx-background-color: radial-gradient(center 40% 40% , radius 50% , #84A98C, #2f3e46);" + "-fx-background-insets: 0.5 0.5 0.5 0.5;");
     }
 
     @Override
     public void onMouseExit() {
-     }
+//        if (tag == Tag.FILLED) setStyle(tag.style);
+    }
 
     @Override
     public void onMouseClick() {
@@ -50,7 +52,7 @@ public class SolitaerButton extends Button implements PlayButton {
 
         switch (tag) {
             case EMPTY:
-                parentBoard.resetColors();
+                parentBoard.resetStyle();
 
                 //returns if the first ever clicked button is EMPTY which creates a nullpointer.
                 if (parentBoard.getLastClicked() == null) {
@@ -69,7 +71,7 @@ public class SolitaerButton extends Button implements PlayButton {
                         setTag(Tag.FILLED);
 
                         //add new move
-                        parentBoard.moves.add(new int[][]{{lastClicked.xPos,lastClicked.yPos},{middleButton.xPos, middleButton.yPos},{xPos,yPos}});
+                        parentBoard.moves.add(new int[][]{{lastClicked.xPos, lastClicked.yPos}, {middleButton.xPos, middleButton.yPos}, {xPos, yPos}});
 
                         //check for win
                         parentBoard.checkWin();
@@ -78,19 +80,22 @@ public class SolitaerButton extends Button implements PlayButton {
 
                 break;
             case FILLED:
-                parentBoard.resetColors();
+                parentBoard.resetStyle();
 
-                for (SolitaerButton current : neighbours) {
-                    if (current.tag == Tag.EMPTY) {
-                        current.setStyle(Tag.SELECTED.style);
+                //effect
+                setStyle("-fx-background-radius: 50%; " + "-fx-background-color: radial-gradient(center 40% 40% , radius 45% , #84A98C, #2f3e46);" + "-fx-background-insets: 0.1 0.1 0.1 0.1;");
 
-                    }
+                List<int[]> validMoves = getValidMoves();
+
+                for (int[] ints : validMoves) {
+                    parentBoard.getButtonByCords(ints[0], ints[1]).setStyle(Tag.HIGHLIGHTED.style);
                 }
 
                 parentBoard.setLastClicked(this);
 
                 break;
             case WALL:
+                parentBoard.resetStyle();
 
         }
     }
@@ -108,39 +113,37 @@ public class SolitaerButton extends Button implements PlayButton {
                 });
     }
 
+    public List<int[]> getValidMoves() {
+        List<int[]> positions = new ArrayList<>();
+
+
+        if (parentBoard.getButtonByCords(xPos - 1, yPos).tag == Tag.FILLED &&
+                parentBoard.getButtonByCords(xPos - 2, yPos).tag == Tag.EMPTY) {
+            positions.add(new int[]{xPos - 2, yPos});
+        }
+
+        if (parentBoard.getButtonByCords(xPos + 1, yPos).tag == Tag.FILLED &&
+                parentBoard.getButtonByCords(xPos + 2, yPos).tag == Tag.EMPTY) {
+            positions.add(new int[]{xPos + 2, yPos});
+        }
+
+
+        if (parentBoard.getButtonByCords(xPos, yPos - 1).tag == Tag.FILLED &&
+                parentBoard.getButtonByCords(xPos, yPos - 2).tag == Tag.EMPTY) {
+            positions.add(new int[]{xPos, yPos - 2});
+        }
+
+        if (parentBoard.getButtonByCords(xPos, yPos + 1).tag == Tag.FILLED &&
+                parentBoard.getButtonByCords(xPos, yPos + 2).tag == Tag.EMPTY) {
+            positions.add(new int[]{xPos, yPos + 2});
+        }
+
+        return positions;
+
+    }
+
     public List<SolitaerButton> getNeighbours() {
         List<SolitaerButton> list = new ArrayList<>();
-
-        /*
-        for (int i = xPos-2; i <= xPos+2; i++) {
-            for (int j = yPos-2; j <= yPos+2; j++) {
-                SolitaerButton current = parentBoard.getButtonByCords(i, j);
-                if (current == this) {
-                    continue;
-                }
-
-                list.add(parentBoard.getButtonByCords(i, j));
-            }
-        }
-        */
-        /*
-        for (int i = xPos-2; i <= xPos+2; i++) {
-            SolitaerButton current = parentBoard.getButtonByCords(i, yPos);
-            if (current == this) {
-                continue;
-            }
-            list.add(current);
-        }
-
-         for (int i = yPos-2; i <= yPos+2; i++) {
-            SolitaerButton current = parentBoard.getButtonByCords(xPos, i);
-            if (current == this) {
-                continue;
-            }
-            list.add(current);
-        }
-
-         */
 
         list.add(parentBoard.getButtonByCords(xPos - 2, yPos));
         list.add(parentBoard.getButtonByCords(xPos + 2, yPos));
