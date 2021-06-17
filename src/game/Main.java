@@ -11,6 +11,15 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
 
 public class Main extends Application {
 
@@ -21,7 +30,6 @@ public class Main extends Application {
     /*
     TODO:
         Speichern Laden
-        Map rotation fixen
      */
 
     @Override
@@ -49,6 +57,16 @@ public class Main extends Application {
         mapButtons.setAlignment(Pos.CENTER);
         mapButtons.getChildren().addAll(previousMap, mapLabel, nextMap);
 
+//        Save and Load
+        HBox saveLoadButtons = new HBox();
+        Button save = new Button("Save");
+        Button load = new Button("Load");
+
+        saveLoadButtons.getChildren().addAll(save, load);
+
+        save.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> save(boards[currentMap]));
+
+
 //        EventHandlers
         nextMap.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             borderPane.setCenter(nextMap(boards[currentMap]));
@@ -61,12 +79,47 @@ public class Main extends Application {
         });
 
 
-        vBox.getChildren().addAll(mapButtons);
+        vBox.getChildren().addAll(mapButtons,saveLoadButtons);
 
         borderPane.setRight(vBox);
 
         stage.setScene(new Scene(borderPane, 900, 700));
         stage.show();
+    }
+
+//    public static void load() {
+//        try (BufferedReader in = Files.newBufferedReader(Paths.get(srcFile), StandardCharsets.UTF_8))
+//        {
+//            String line;
+//            while ((line = in.readLine()) != null) {
+//
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+
+    public static void save(Board board) {
+        try (BufferedWriter out = Files.newBufferedWriter(Paths.get("./res/game.txt"), StandardCharsets.UTF_8)) {
+            Map map = board.board;
+            int xLength = map.map.length;
+            int yLength = map.map[0].length;
+            StringBuilder res = new StringBuilder();
+            List<SolitaerButton> buttonList = board.getSolitaerButtons();
+
+            for (int i = 0; i < yLength; i++) {
+                for (int j = 0; j < xLength; j++) {
+                    res.append(buttonList.get(i * xLength + j).tag.symbol);
+                }
+                res.append(System.lineSeparator());
+            }
+
+            out.write(res.toString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Board previousMap(Board usedBoard) {

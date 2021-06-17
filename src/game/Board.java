@@ -37,6 +37,10 @@ public class Board extends GridPane {
         return solitaerButtons.get(0);
     }
 
+    public List<SolitaerButton> getSolitaerButtons() {
+        return solitaerButtons;
+    }
+
     public void generateBoard(char[][] board) {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
