@@ -9,15 +9,19 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -26,12 +30,13 @@ public class Main extends Application {
     private static int currentMap = 0;
     private static Board[] boards = new Board[Map.values().length];
     private static BorderPane borderPane = new BorderPane();
+    private static File homeDirectory = new File("./res");
+
 
     /*
     TODO:
         Speichern Laden
      */
-
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -64,7 +69,8 @@ public class Main extends Application {
 
         saveLoadButtons.getChildren().addAll(save, load);
 
-        save.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> save(boards[currentMap]));
+        save.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> save());
+        load.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> load());
 
 
 //        EventHandlers
@@ -79,7 +85,7 @@ public class Main extends Application {
         });
 
 
-        vBox.getChildren().addAll(mapButtons,saveLoadButtons);
+        vBox.getChildren().addAll(mapButtons, saveLoadButtons);
 
         borderPane.setRight(vBox);
 
@@ -87,35 +93,93 @@ public class Main extends Application {
         stage.show();
     }
 
-//    public static void load() {
-//        try (BufferedReader in = Files.newBufferedReader(Paths.get(srcFile), StandardCharsets.UTF_8))
-//        {
-//            String line;
-//            while ((line = in.readLine()) != null) {
-//
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
+    public static void chooseDirectory() {
+        if (homeDirectory != null) {
+            return;
+        }
 
-    public static void save(Board board) {
-        try (BufferedWriter out = Files.newBufferedWriter(Paths.get("./res/game.txt"), StandardCharsets.UTF_8)) {
-            Map map = board.board;
-            int xLength = map.map.length;
-            int yLength = map.map[0].length;
-            StringBuilder res = new StringBuilder();
-            List<SolitaerButton> buttonList = board.getSolitaerButtons();
+        DirectoryChooser dirChooser = new DirectoryChooser();
+        dirChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        homeDirectory = dirChooser.showDialog(null);
+    }
 
-            for (int i = 0; i < yLength; i++) {
-                for (int j = 0; j < xLength; j++) {
-                    res.append(buttonList.get(i * xLength + j).tag.symbol);
+    public static void load() {
+        chooseDirectory();
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setInitialDirectory(homeDirectory);
+//        File file = fileChooser.showOpenDialog(null);
+
+        try (BufferedReader in = Files.newBufferedReader(Paths.get( "res/game.txt"), StandardCharsets.UTF_8)) {
+            int counter = 0;
+            while (true) {
+                if (counter > Map.values().length-1) {
+                    break;
                 }
-                res.append(System.lineSeparator());
+
+                List<char[]> board = new ArrayList<>();
+
+                while (true) {
+
+                    String line = in.readLine();
+                    if (line == null) {
+                        break;
+                    }
+                    if (line.equals("")) {
+                        break;
+                    }
+
+                    char[] cur = new char[line.length()];
+
+                    //add chars of line to array
+                    for (int i = 0; i < line.length(); i++) {
+                        cur[i] = line.charAt(i);
+                    }
+                    System.out.println(Arrays.toString(cur));
+                    board.add(cur);
+                }
+
+                //add new map
+                if (board.size() < 1) {
+                    break;
+                }
+                Board newBoard = new Board(board);
+                boards[counter] = newBoard;
+                counter++;
             }
 
-            out.write(res.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public static void save() {
+        chooseDirectory();
+
+        try (BufferedWriter out = Files.newBufferedWriter(Paths.get(homeDirectory + "/game.txt"), StandardCharsets.UTF_8)) {
+            for (int i = 0; i < boards.length; i++) {
+                if (boards[i] == null) {
+                    break;
+                }
+
+                Map map = boards[i].board;
+                int xLength = map.map.length;
+                int yLength = map.map[0].length;
+
+                StringBuilder res = new StringBuilder();
+                List<SolitaerButton> buttonList = boards[i].getSolitaerButtons();
+
+                for (int j = 0; j < yLength; j++) {
+                    for (int k = 0; k < xLength; k++) {
+                        res.append(buttonList.get(j * xLength + k).tag.symbol);
+                    }
+                    res.append(System.lineSeparator());
+                }
+
+                out.write(res + System.lineSeparator());
+            }
+
 
         } catch (IOException e) {
             e.printStackTrace();

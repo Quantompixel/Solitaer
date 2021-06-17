@@ -9,7 +9,7 @@ import java.util.List;
 public class Board extends GridPane {
     private final List<SolitaerButton> solitaerButtons = new ArrayList<>();
     private final List<ControlButton> controlButtons = new ArrayList<>();
-    public final Map board;
+    public static Map board = Map.values()[0];
     private SolitaerButton lastClicked;
     UndoRedoList<int[][]> moves = new UndoRedoList<>();
 
@@ -17,6 +17,11 @@ public class Board extends GridPane {
         this.board = map;
         setStyle("-fx-background-color: #cad2c5");
         generateBoard(board.map);
+    }
+
+    public Board(List<char[]> board) {
+        setStyle("-fx-background-color: #cad2c5");
+        generateBoard(board);
     }
 
     public void setLastClicked(SolitaerButton lastClicked) {
@@ -45,6 +50,35 @@ public class Board extends GridPane {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 int current = board[i][j];
+
+                SolitaerButton btn;
+
+                switch (current) {
+                    case 'O':
+                        btn = new SolitaerButton("", j, i, this, Tag.EMPTY);
+                        solitaerButtons.add(btn);
+                        add(btn, btn.xPos, btn.yPos);
+                        break;
+                    case '#':
+                        btn = new SolitaerButton("", j, i, this, Tag.FILLED);
+                        solitaerButtons.add(btn);
+                        add(btn, btn.xPos, btn.yPos);
+                        break;
+                    case '.':
+                        btn = new SolitaerButton("", j, i, this, Tag.WALL);
+                        solitaerButtons.add(btn);
+                        add(btn, btn.xPos, btn.yPos);
+                        break;
+                }
+            }
+        }
+        addControlButton();
+    }
+
+    public void generateBoard(List<char[]> board) {
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.get(i).length; j++) {
+                int current = board.get(i)[j];
 
                 SolitaerButton btn;
 
