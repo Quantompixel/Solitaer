@@ -9,7 +9,7 @@ import java.util.List;
 public class Board extends GridPane {
     private final List<SolitaerButton> solitaerButtons = new ArrayList<>();
     private final List<ControlButton> controlButtons = new ArrayList<>();
-    public static Map board = Map.values()[0];
+    public final Map board;
     private SolitaerButton lastClicked;
     UndoRedoList<int[][]> moves = new UndoRedoList<>();
 
@@ -19,7 +19,8 @@ public class Board extends GridPane {
         generateBoard(board.map);
     }
 
-    public Board(List<char[]> board) {
+    public Board(List<char[]> board, Map map) {
+        this.board = map;
         setStyle("-fx-background-color: #cad2c5");
         generateBoard(board);
     }

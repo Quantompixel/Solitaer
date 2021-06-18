@@ -105,9 +105,6 @@ public class Main extends Application {
 
     public static void load() {
         chooseDirectory();
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setInitialDirectory(homeDirectory);
-//        File file = fileChooser.showOpenDialog(null);
 
         try (BufferedReader in = Files.newBufferedReader(Paths.get( "res/game.txt"), StandardCharsets.UTF_8)) {
             int counter = 0;
@@ -117,24 +114,32 @@ public class Main extends Application {
                 }
 
                 List<char[]> board = new ArrayList<>();
+                boolean firstIteration = true;
+                String mapName = "";
 
                 while (true) {
-
                     String line = in.readLine();
+
                     if (line == null) {
                         break;
                     }
                     if (line.equals("")) {
+                        //-> new board begins
                         break;
+                    }
+                    if (firstIteration) {
+                        //read out the map on the first iteration
+                        mapName = line;
+                        firstIteration = false;
+                        continue;
                     }
 
                     char[] cur = new char[line.length()];
 
-                    //add chars of line to array
+                    //add row
                     for (int i = 0; i < line.length(); i++) {
                         cur[i] = line.charAt(i);
                     }
-                    System.out.println(Arrays.toString(cur));
                     board.add(cur);
                 }
 
@@ -142,7 +147,7 @@ public class Main extends Application {
                 if (board.size() < 1) {
                     break;
                 }
-                Board newBoard = new Board(board);
+                Board newBoard = new Board(board, Map.valueOf(mapName));
                 boards[counter] = newBoard;
                 counter++;
             }
@@ -151,6 +156,8 @@ public class Main extends Application {
             e.printStackTrace();
         }
 
+        //update borderpane
+        borderPane.setCenter(boards[currentMap]);
 
     }
 
@@ -159,10 +166,12 @@ public class Main extends Application {
 
         try (BufferedWriter out = Files.newBufferedWriter(Paths.get(homeDirectory + "/game.txt"), StandardCharsets.UTF_8)) {
             for (int i = 0; i < boards.length; i++) {
+                //only save boards which have been changed
                 if (boards[i] == null) {
                     break;
                 }
 
+                //calculates how many lines are read out
                 Map map = boards[i].board;
                 int xLength = map.map.length;
                 int yLength = map.map[0].length;
@@ -170,6 +179,8 @@ public class Main extends Application {
                 StringBuilder res = new StringBuilder();
                 List<SolitaerButton> buttonList = boards[i].getSolitaerButtons();
 
+                //add map type
+                res.append(map).append(System.lineSeparator());
                 for (int j = 0; j < yLength; j++) {
                     for (int k = 0; k < xLength; k++) {
                         res.append(buttonList.get(j * xLength + k).tag.symbol);
