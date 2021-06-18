@@ -20,8 +20,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
@@ -30,7 +35,7 @@ public class Main extends Application {
     private static int currentMap = 0;
     private static Board[] boards = new Board[Map.values().length];
     private static BorderPane borderPane = new BorderPane();
-    private static File homeDirectory = new File("./res");
+    private static File homeDirectory;
 
 
     /*
@@ -55,9 +60,9 @@ public class Main extends Application {
         HBox mapButtons = new HBox();
         Label mapLabel = new Label(Map.values()[currentMap].displayText);
         mapLabel.setStyle("-fx-font-size: 20pt");
-        Button nextMap = new Button("\u21A0");
+        Button nextMap = new Button("\u276F");
         nextMap.setStyle(Tag.MAP.style);
-        Button previousMap = new Button("\u219E");
+        Button previousMap = new Button("\u276E");
         previousMap.setStyle(Tag.MAP.style);
         mapButtons.setAlignment(Pos.CENTER);
         mapButtons.getChildren().addAll(previousMap, mapLabel, nextMap);
@@ -103,13 +108,40 @@ public class Main extends Application {
         homeDirectory = dirChooser.showDialog(null);
     }
 
-    public static void load() {
-        chooseDirectory();
+    public static File chooseFile() {
+        FileChooser fileChooser = new FileChooser();
 
-        try (BufferedReader in = Files.newBufferedReader(Paths.get( "res/game.txt"), StandardCharsets.UTF_8)) {
+        if (homeDirectory == null) {
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        } else {
+            fileChooser.setInitialDirectory(homeDirectory);
+        }
+
+        return fileChooser.showOpenDialog(null);
+    }
+
+    public static String generateFileName() {
+        StringBuilder res = new StringBuilder();
+
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("ddMMyy");
+        res.append(formatter.format(date)).append('_');
+
+        for (int i = 0; i < 5; i++) {
+            res.append((char) (Math.random() * ('z' - 'a') + 'a'));
+        }
+
+        return res.toString();
+    }
+
+    public static void load() {
+        File load = chooseFile();
+        homeDirectory = load.getParentFile();
+
+        try (BufferedReader in = Files.newBufferedReader(Paths.get(load.getPath()), StandardCharsets.UTF_8)) {
             int counter = 0;
             while (true) {
-                if (counter > Map.values().length-1) {
+                if (counter > Map.values().length - 1) {
                     break;
                 }
 
@@ -158,13 +190,15 @@ public class Main extends Application {
 
         //update borderpane
         borderPane.setCenter(boards[currentMap]);
+        boards[currentMap].checkWin();
 
     }
 
     public static void save() {
         chooseDirectory();
+        String fileName = generateFileName();
 
-        try (BufferedWriter out = Files.newBufferedWriter(Paths.get(homeDirectory + "/game.txt"), StandardCharsets.UTF_8)) {
+        try (BufferedWriter out = Files.newBufferedWriter(Paths.get(homeDirectory + "/" + fileName), StandardCharsets.UTF_8)) {
             for (int i = 0; i < boards.length; i++) {
                 //only save boards which have been changed
                 if (boards[i] == null) {
