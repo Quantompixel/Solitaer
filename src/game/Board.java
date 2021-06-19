@@ -1,5 +1,6 @@
 package game;
 
+import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
@@ -16,12 +17,14 @@ public class Board extends GridPane {
     public Board(Map map) {
         this.board = map;
         setStyle("-fx-background-color: #cad2c5");
+        setAlignment(Pos.CENTER);
         generateBoard(board.map);
     }
 
     public Board(List<char[]> board, Map map) {
         this.board = map;
         setStyle("-fx-background-color: #cad2c5");
+        setAlignment(Pos.CENTER);
         generateBoard(board);
     }
 

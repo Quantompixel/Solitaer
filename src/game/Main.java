@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -40,7 +41,7 @@ public class Main extends Application {
 
     /*
     TODO:
-        Speichern Laden
+        Show winning pos
      */
     @Override
     public void start(Stage stage) throws Exception {
@@ -53,15 +54,17 @@ public class Main extends Application {
         VBox vBox = new VBox();
         vBox.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
         vBox.setMinWidth(200);
-        vBox.setStyle("-fx-effect: dropshadow(gaussian, #425057, 30, 0, 0, 0); -fx-background-color: #b9c8b7");
+        vBox.setStyle("-fx-background-color: #b9c8b7");
         vBox.setAlignment(Pos.TOP_CENTER);
+        vBox.setPadding(new Insets(10, 10, 10, 10));
+        vBox.setSpacing(40);
 
 //        Map cycler
         HBox mapButtons = new HBox();
         Label mapLabel = new Label(Map.values()[currentMap].displayText);
         mapLabel.setStyle("-fx-font-size: 20pt");
         Button nextMap = new Button("\u276F");
-        nextMap.setStyle(Tag.MAP.style);
+        nextMap.setStyle("-fx-text-alignment: center;" + Tag.MAP.style);
         Button previousMap = new Button("\u276E");
         previousMap.setStyle(Tag.MAP.style);
         mapButtons.setAlignment(Pos.CENTER);
@@ -71,12 +74,29 @@ public class Main extends Application {
         HBox saveLoadButtons = new HBox();
         Button save = new Button("Save");
         Button load = new Button("Load");
-
+        save.setStyle(Tag.MAP.style);
+        load.setStyle(Tag.MAP.style);
+        saveLoadButtons.setAlignment(Pos.CENTER);
         saveLoadButtons.getChildren().addAll(save, load);
 
         save.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> save());
         load.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> load());
 
+//        Wiki
+        Text wikiText = new Text();
+        wikiText.setText("Peg solitaire (or Solo Noble) is a board game for one player involving movement of pegs on a board with holes.\n" +
+                "The standard game fills the entire board with pegs except for the central hole. The objective is," +
+                " making valid moves, to empty the entire board except for a solitary peg in the central hole."
+        );
+        wikiText.setWrappingWidth(200);
+
+//        Explanation
+        Text explain = new Text();
+        explain.setText("To perform moves a marble has to be clicked and then an empty field. All viable moves are highlighted with a darker green.\n" +
+                "Also plays can be undone with the Buttons in the bottom left corner\n" +
+                "Have Fun");
+        explain.setWrappingWidth(200);
+        explain.setStyle("-fx-font-weight: bold");
 
 //        EventHandlers
         nextMap.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
@@ -90,7 +110,7 @@ public class Main extends Application {
         });
 
 
-        vBox.getChildren().addAll(mapButtons, saveLoadButtons);
+        vBox.getChildren().addAll(mapButtons, saveLoadButtons, wikiText, explain);
 
         borderPane.setRight(vBox);
 
