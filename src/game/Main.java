@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -22,11 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalField;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -113,6 +110,10 @@ public class Main extends Application {
         vBox.getChildren().addAll(mapButtons, saveLoadButtons, wikiText, explain);
 
         borderPane.setRight(vBox);
+
+        //icon
+        Image icon = new Image("file:res/icon.png");
+        stage.getIcons().add(icon);
 
         stage.setScene(new Scene(borderPane, 900, 700));
         stage.show();
